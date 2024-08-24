@@ -1,3 +1,4 @@
+import json
 from typing import get_type_hints
 
 from models.QueryResponse import QueryResponse
@@ -388,6 +389,9 @@ context = {
     }
 }
 
+with open("./sf_scema.json", "r") as schema:
+    schema = json.load(schema)
+
 cot_template = """
         You are a Senior SnowSQL Developer working with a postgres Data Warehouse. 
         Instructions:
@@ -496,9 +500,60 @@ Question: {}
 Response: {}
 """
 
+cot_template_sf = """
+    You are a Senior SnowSQL Developer working with a Snowflake Data Warehouse. 
+    Instructions:
+    - Break down the user query into smaller, more manageable steps. Follow the reasoning instructions steps below.
+    - Use relevant columns from the context given below to filter and subset the data for each step.
+    - Plan the final SnowSQL query based on the user's intent.
+    - After planning the SnowSQL query and based on the user query, decide which visualization chart will be
+      more suitable to represent the output of the SnowSQL query. Choose from the supported visualization charts
+      given below. Pick the chart from the list only as it is and send back the output.
+    - Pick the columns from the given context below only. Don’t construct the query with attributes that are not 
+      provided in the context. Context information is something you need to understand, then analyze the context 
+      information with the user query and then plan, build the SnowSQL query.
+    - Follow the output parser format as JSON only. The result should be returned in the specified format only. 
+      Check the below sample query examples of how users need the output.
+    - Use aliases for each variable.
+    - Make sure the column you are adding to the SELECT statement belongs to the specific table you are using.
+    - Always return the correct visualization chart type based on the generated query and response, as this 
+      determines how the data will be rendered in the UI, if the question is related to distribution chose pie chart if relevant.
+    - when extracting month it should be jan, feb, mar, apr, may..
+    - use these enums for financial_metric -  Balance,Credit Score,Income,Expenditure
+    - if the question is related to the given context schema then its not an generic answer so fill the generic identifier carefully
+    
+      
+      
+    example -
+    1.  
+    question - How many payments were made each month?
+    query - "SELECT 
+    TO_CHAR(payment_date, 'Mon') AS payment_month,
+    COUNT(payment_id) AS num_payments
+    FROM payments
+    GROUP BY payment_month
+    ORDER BY MIN(payment_date);"
+
+    Output parser format:
+    {}
+
+    Supported visualization charts:
+    {}
+
+    Context:
+    {}
+
+    Question:
+    {}
+"""
+
+
 def getFormattedPrompt(**kwargs):
     if kwargs.get("type") == "QUERY_PROMPT":
-        return cot_template.format(get_type_hints(QueryResponse), supported_visualization_chart,
-                                   context, kwargs.get("question", ""))
+        return cot_template_sf.format(get_type_hints(QueryResponse), supported_visualization_chart,
+                                   schema, kwargs.get("question", ""))
     elif kwargs.get("type") == "SUMMARY_PROMPT":
         return summery_prompt.format(kwargs.get("question", ""), kwargs.get("response", ""))
+
+
+# print(getFormattedPrompt(question= "ques", type="QUERY_PROMPT"))

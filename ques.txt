@@ -1,0 +1,6 @@
+How many payments were made each month?
+What is the distribution of payment statuses in pie chart
+give me top 10 users based on payment amount
+
+give me the ratio of payment status for Ariel Hendrix
+what is the credit score of Brian Johnston?

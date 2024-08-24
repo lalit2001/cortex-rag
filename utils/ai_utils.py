@@ -32,8 +32,10 @@ def getAISummery(connection: SnowflakeConnection, prompt: str) -> str:
         cs.execute(
             f"SELECT SNOWFLAKE.CORTEX.COMPLETE('snowflake-arctic', '{val}');")
         one_row = cs.fetchone()
+        print(one_row)
         return one_row[0]
     finally:
+        print(one_row)
         cs.close()
 
 def parseResponse(response: str) -> QueryResponse:

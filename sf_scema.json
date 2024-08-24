@@ -1,0 +1,176 @@
+{
+    "users": {
+        "columns": [
+            {
+                "name": "user_id",
+                "type": "string",
+                "description": "Unique identifier for each user"
+            },
+            {
+                "name": "user_name",
+                "type": "string",
+                "description": "Name of the user"
+            },
+            {
+                "name": "user_email",
+                "type": "string",
+                "description": "Email address of the user"
+            },
+            {
+                "name": "user_phone",
+                "type": "string",
+                "description": "Phone number of the user"
+            }
+        ],
+        "relationships": [],
+        "description": "Table storing user information"
+    },
+    "payments": {
+        "columns": [
+            {
+                "name": "payment_id",
+                "type": "string",
+                "description": "Unique identifier for each payment"
+            },
+            {
+                "name": "user_id",
+                "type": "string",
+                "description": "Identifier for the user who made the payment"
+            },
+            {
+                "name": "amount",
+                "type": "float",
+                "description": "Amount of the payment"
+            },
+            {
+                "name": "payment_date",
+                "type": "date",
+                "description": "Date when the payment was made"
+            },
+            {
+                "name": "status",
+                "type": "string",
+                "description": "Current status of the payment (e.g., completed, pending)"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "foreign_table": "users",
+                "foreign_column": "user_id"
+            }
+        ],
+        "description": "Table storing payment information"
+    },
+    "settlements": {
+        "columns": [
+            {
+                "name": "settlement_id",
+                "type": "string",
+                "description": "Unique identifier for each settlement"
+            },
+            {
+                "name": "payment_id",
+                "type": "string",
+                "description": "Identifier for the associated payment"
+            },
+            {
+                "name": "settlement_date",
+                "type": "date",
+                "description": "Date when the settlement occurred"
+            },
+            {
+                "name": "amount_settled",
+                "type": "float",
+                "description": "Amount that was settled"
+            },
+            {
+                "name": "settlement_status",
+                "type": "string",
+                "description": "Current status of the settlement (e.g., completed, pending)"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "payment_id",
+                "foreign_table": "payments",
+                "foreign_column": "payment_id"
+            }
+        ],
+        "description": "Table storing settlement information"
+    },
+    "disputes": {
+        "columns": [
+            {
+                "name": "dispute_id",
+                "type": "string",
+                "description": "Unique identifier for each dispute"
+            },
+            {
+                "name": "payment_id",
+                "type": "string",
+                "description": "Identifier for the associated payment"
+            },
+            {
+                "name": "dispute_date",
+                "type": "date",
+                "description": "Date when the dispute was raised"
+            },
+            {
+                "name": "dispute_reason",
+                "type": "string",
+                "description": "Reason for the dispute"
+            },
+            {
+                "name": "dispute_status",
+                "type": "string",
+                "description": "Current status of the dispute (e.g., under review, resolved)"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "payment_id",
+                "foreign_table": "payments",
+                "foreign_column": "payment_id"
+            }
+        ],
+        "description": "Table storing dispute information"
+    },
+    "financial_data": {
+        "columns": [
+            {
+                "name": "financial_data_id",
+                "type": "string",
+                "description": "Unique identifier for each financial data record"
+            },
+            {
+                "name": "user_id",
+                "type": "string",
+                "description": "Identifier for the user to whom the financial data pertains"
+            },
+            {
+                "name": "data_date",
+                "type": "date",
+                "description": "Date of the financial data record"
+            },
+            {
+                "name": "financial_metric",
+                "type": "string",
+                "description": "Type of financial metric being recorded"
+            },
+            {
+                "name": "value",
+                "type": "float",
+                "description": "Value of the financial metric"
+            }
+        ],
+        "relationships": [
+            {
+                "column": "user_id",
+                "foreign_table": "users",
+                "foreign_column": "user_id"
+            }
+        ],
+        "description": "Table storing financial data related to users"
+    }
+}

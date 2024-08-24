@@ -18,16 +18,24 @@ db_config = {
 print(db_config)
 
 # Connect to the database
-connection = psycopg2.connect(**db_config)
+# connection = psycopg2.connect(**db_config)
+connection = "psycopg2.connect(**db_config)"
 
 def get_connection() -> SnowflakeConnection:
-    print(config.SF_USER,
-       config.SF_PASSWORD,
-        config.SF_ACCOUNT)
+    snowflake_account = config.SF_ACCOUNT
+    snowflake_user = config.SF_USER
+    snowflake_password = config.SF_PASSWORD
+    snowflake_warehouse = 'COMPUTE_WH'
+    snowflake_database = 'RAG_DEMO'
+    snowflake_schema = 'PUBLIC'
+
     ctx = snowflake.connector.connect(
-        user=config.SF_USER,
-        password=config.SF_PASSWORD,
-        account=config.SF_ACCOUNT
+        user=snowflake_user,
+        password=snowflake_password,
+        account=snowflake_account,
+        warehouse=snowflake_warehouse,
+        database=snowflake_database,
+        schema=snowflake_schema
     )
 
     return ctx
@@ -45,5 +53,18 @@ def runPostgresQuery( query: str) -> List[dict]:
     try:
         one_row = pandas.read_sql(query, con=connection)
         return one_row.to_dict(orient='records')
+    finally:
+        cs.close()
+
+
+def runSnowfakeQuery(query: str) -> List[dict]:
+
+    conn: SnowflakeConnection = get_connection()
+    cs = conn.cursor()
+    try:
+
+        cs.execute(query)
+        df = cs.fetch_pandas_all()
+        return df.to_dict(orient='records')
     finally:
         cs.close()

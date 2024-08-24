@@ -47,6 +47,6 @@ class SecurityPropertiesConfig:
 
 
 # Usage
-load_env_file('D:\play_ground\SNOWFLAKE\snowflake-rag-llm\.env')  # Load the .env file
+load_env_file(r'/Users/lalitmoharana/Documents/codes/personal/cortex-rag/.env')  # Load the .env file
 config = SecurityPropertiesConfig()
 # print(config.AWS_ACCESS_KEY_ID)
