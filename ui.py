@@ -8,27 +8,6 @@ from models.QueryResponse import QueryResponse, Response
 from service.chat_service import getResponse
 
 
-# def getResponse(prompt: str) -> Response:
-#     return Response(**{'snowflakeQuery': 'SELECT SUM(settlement.amount) as total_amount, settlement.partner_source FROM settlement GROUP BY settlement.partner_source ORDER BY total_amount DESC LIMIT 10',
-#                             'chartType': 'line_chart', 'userQuestion': 'give me top 10 settlement',
-#                             'genericResponseIdentifier': False,
-#                             'genericResponse': '',
-#                        "response": [
-#   {
-#     "total_amount": 21844628.27,
-#     "partner_source": "DOJO"
-#   },
-#   {
-#     "total_amount": 84905.03,
-#     "partner_source": "WORLDPAY"
-#   },
-#   {
-#     "total_amount": 20257.46,
-#     "partner_source": "SANDBOX"
-#   }
-# ],
-#                        # "response":"response"
-#                        })
 
 
 supported_visualization_chart = ["bar_chart", "pie_chart", "line_chart", "histogram", "text", "area_chart"]
@@ -36,20 +15,20 @@ supported_visualization_chart = ["bar_chart", "pie_chart", "line_chart", "histog
 
 def infer_axes(df, chart_type):
     if chart_type == "pie_chart":
-        # For pie charts, choose categorical column for names and numerical for values
+
         names_col = df.select_dtypes(include=['object', 'category']).columns[0]
         values_col = df.select_dtypes(include=['number']).columns[0]
         return names_col, values_col
     else:
-        # For other charts, choose first categorical column for x and first numerical for y
+
         x_col = df.select_dtypes(include=['object', 'category']).columns[0]
         y_col = df.select_dtypes(include=['number']).columns[0]
         return x_col, y_col
 
-# Function to create charts
+
 def create_chart(data, chart_type):
     if isinstance(data, str):
-        data = eval(data)  # Convert string representation of list to actual list
+        data = eval(data)
     df = pd.DataFrame(data)
 
     x_axis, y_axis = infer_axes(df, chart_type)
@@ -70,11 +49,11 @@ def create_chart(data, chart_type):
 
 st.title("SQL Query Chatbot")
 
-# Initialize chat history
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Display chat messages from history on app rerun
+
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         if message["role"] == "user":
@@ -102,17 +81,16 @@ for message in st.session_state.messages:
                 else:
                     st.warning(f"Unsupported chart type: {response.chartType}")
 
-# React to user input
+
 if prompt := st.chat_input("What would you like to know?"):
-    # Display user message in chat message container
+
     st.chat_message("user").markdown(prompt)
-    # Add user message to chat history
+
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Get response from your function
     response = getResponse(prompt)
 
-    # Display assistant response in chat message container
+
     with st.chat_message("assistant"):
         st.markdown(f"**SQL Query:** {response.snowflakeQuery}")
         st.markdown(f"**Chart Type:** {response.chartType}")
@@ -138,4 +116,4 @@ if prompt := st.chat_input("What would you like to know?"):
             else:
                 st.warning(f"Unsupported chart type: {response.chartType}")
 
-            # Add assistant response to chat history
+
