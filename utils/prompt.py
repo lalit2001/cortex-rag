@@ -554,6 +554,3 @@ def getFormattedPrompt(**kwargs):
                                    schema, kwargs.get("question", ""))
     elif kwargs.get("type") == "SUMMARY_PROMPT":
         return summery_prompt.format(kwargs.get("question", ""), kwargs.get("response", ""))
-
-
-# print(getFormattedPrompt(question= "ques", type="QUERY_PROMPT"))

@@ -1,7 +1,4 @@
 import json
-from dataclasses import dataclass
-from typing import List
-
 from llama_index.core.base.llms.types import MessageRole, ChatMessage
 from llama_index.llms.bedrock import Bedrock
 from snowflake.connector import SnowflakeConnection

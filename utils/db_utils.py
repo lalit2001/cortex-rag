@@ -1,10 +1,8 @@
 from typing import List
 
 import pandas
-import psycopg2
 import snowflake.connector
 from snowflake.connector import SnowflakeConnection
-import pandas as pd
 
 from utils.config import config
 
@@ -17,8 +15,6 @@ db_config = {
 
 print(db_config)
 
-# Connect to the database
-# connection = psycopg2.connect(**db_config)
 connection = "psycopg2.connect(**db_config)"
 
 def get_connection() -> SnowflakeConnection:
